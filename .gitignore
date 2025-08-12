@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.env
+
+# C++ / CMake
+build/
+build_*/
+*.o
+*.so
+*.a
+*.exe
+*.dll
+*.lib
+*.out
+
+# OS Files
+.DS_Store
