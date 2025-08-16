@@ -7,27 +7,36 @@ from fastapi.responses import JSONResponse
 import numpy as np
 import cv2
 
-# basic test script for now. will become server.
+app = FastAPI(title="YOLOv5 Inference Server")
 
-# load model - using yolov5
-# todo: make this model name configurable
+# load model on startup
+print("Loading YOLOv5 model...")
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+model.eval() # set to evaluation mode
+print("Model loaded.")
 
-def run_inference_on_image(img_path):
-    print(f"Running test inference on {img_path}")
-    img = Image.open(img_path)
+@app.post("/detect/")
+async def detect_objects(file: UploadFile = File(...)):
+    # read image bytes
+    contents = await file.read()
+    
+    # convert bytes to PIL image
+    img = Image.open(io.BytesIO(contents))
+    
+    # run inference
     results = model(img)
     
-    # show results
-    results.show()
+    # format results as json
+    # results.pandas().xyxy[0] is a df. convert to json
+    detections = results.pandas().xyxy[0].to_dict(orient='records')
     
-    # or print them
-    print("Detections:")
-    print(results.pandas().xyxy[0])
+    # detections format:
+    # [
+    #   {'xmin': 1.0, 'ymin': 2.0, 'xmax': 3.0, 'ymax': 4.0, 'confidence': 0.9, 'class': 0, 'name': 'person'},
+    #   ...
+    # ]
+    
+    return JSONResponse(content=detections)
 
 if __name__ == "__main__":
-    # basic test to make sure model works
-    # YOU MUST ADD A 'test_image.jpg' file to this directory
-    print("running basic test...")
-    # run_inference_on_image('test_image.jpg')
-    print("test complete. server.py is ready to be built out")
+    uvicorn.run(app, host="127.0.0.1", port=8000)
