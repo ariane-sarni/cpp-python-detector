@@ -90,6 +90,8 @@ int main() {
         return -1;
     }
 
+    cv::namedWindow("Webcam Feed", cv::WINDOW_NORMAL);
+
     cv::Mat frame;
     while (true) {
         cap >> frame;
