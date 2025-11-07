@@ -8,7 +8,7 @@ It's designed to be a clean, low-latency example of integrating a high-performan
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Backend (Python):**
     * **FastAPI:** For the high-speed, asynchronous web server.
@@ -26,7 +26,7 @@ It's designed to be a clean, low-latency example of integrating a high-performan
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 You will need two terminals.
 
